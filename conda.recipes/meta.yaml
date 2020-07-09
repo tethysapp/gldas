@@ -1,36 +1,37 @@
+{% set data = load_setup_py_data(setup_file='../setup.py', from_recipe_dir=True) %}
+{% set name = data.get('name')|replace("tethysapp-", "")|lower %}
+
 package:
-  name: gldas
-  version: 0.3
-
-source:
-  path: ../
-
-build:
-  number: 0
-  preserve_egg_dir: True
-
-requirements:
-  build:
-    - python
-    - tethys-platform
-  run:
-    - netcdf4
-    - numpy
-    - pandas
-    - rasterstats
-    - rasterio
-    - requests
-    - pyshp
-    - geomatics==0.8
+  name: {{ name }}
+  version: {{ data.get('version') }}
 
 about:
-  home: https://github.com/rileyhales/gldas
-  summary: Shows time-animated maps and timeseries plots of monthly average, 1/4 degree resolution, GLDAS data sets from NASA LDAS and LIS.
-  license: BSD 3-Clause License
-  license_family: BSD
-  license_file: ../LICENSE
-  dev_url: https://gldas-data-tool.readthedocs.io
+  author: {{ data.get('author')}}
+  description: {{ data.get('description')}}
+  license: {{ data.get('license')}}
+  dev_url: {{ data.get('url') }}
+
+outputs:
+  - name: {{ name }}
 
 extra:
+  author_email:  {{ data.get('author_email')}}
+  keywords: {{ data.get('keywords')}}
   recipe-maintainers:
-    - rileyhales
+    - TethysAppWarehouse
+build:
+  noarch: python
+  preserve_egg_dir: true
+  script: python setup.py install --record=record.txt
+requirements:
+  build:
+  - python
+  run:
+  - geomatics>=0.10
+  - netcdf4
+  - numpy
+  - pandas
+  - requests
+  - pyshp
+source:
+  path: ..
